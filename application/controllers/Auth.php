@@ -7,7 +7,7 @@ class Auth extends CI_Controller {
 		parent::__construct();
 		$this->load->model('user');
 		$this->load->helper(array('url'));
-		$this->load->library('form_validation');
+		$this->load->library(array('form_validation', 'encryption', 'session'));
 	}
 	
 	public function index(){
@@ -47,17 +47,35 @@ class Auth extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
 			$this->load->view('user_auth/registrasi');
 		} else {
-			// $this->load->view('user_auth/index');
-			echo "yeay";
+			$data = array(
+				'username' => $username,
+				'password' => md5($password)
+			);
+			$this->user->create_user($data);
+			redirect('auth/index');
 		}
 
-		$data = array(
-			'username' => $username,
-			'password' => $password
-		);
 	}
 
-	public function login()	{
-		# code...
+	public function user_login() {
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$where = array (
+			'username' => $username,
+			'password' => md5($password)
+		);
+		$user = $this->user->cek_user_login($where);
+		$user_exist = $user->row();
+		$data_user = $user->row();
+		if ($user_exist > 0) {
+			$data_session = array(
+				'username' 	=> $username,
+				'id'		=> $data_user->id
+			);
+			$this->session->userdata($data_session);
+			redirect('beranda/index');
+		} else {
+			redirect('auth/index');
+		}
 	}
 }
