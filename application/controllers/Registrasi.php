@@ -7,6 +7,7 @@ class Registrasi extends CI_Controller {
 		parent::__construct();
 		$this->load->model('user_model','user');
 		$this->load->model('biodata_customer_model','biodata_customer');
+		$this->load->model('lokasi_model','lokasi');
 		$this->load->helper(array('url'));
 		$this->load->library(array('form_validation'));
     }
@@ -28,7 +29,8 @@ class Registrasi extends CI_Controller {
 	}
 	
 	public function regis_data_mall(){
-        $this->load->view('registrasi/regis_data_mall');
+		$data['provinsi'] = $this->lokasi->get_provinsi()->result();
+        $this->load->view('registrasi/regis_data_mall', $data);
 	}
 
 	public function tambah_user(){

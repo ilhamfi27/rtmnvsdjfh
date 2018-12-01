@@ -30,7 +30,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <label>Provinsi</label>
                     <select name="" class="form-control" placeholder="Provinsi" required>
                         <option value="">-- Provinsi --</option>
-                        <option value="x">X</option>
+                        <?php foreach($provinsi as $row): ?>
+                        <option value="<?php echo $row->id; ?>"><?php echo $row->nama; ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 				<div class="form-group">
